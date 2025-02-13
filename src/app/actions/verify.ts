@@ -26,13 +26,16 @@ const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`;
 const action = process.env.NEXT_PUBLIC_WLD_ACTION as string;
 const DATA_FILE = path.join(process.cwd(), 'verifications.json');
 
-async function readVerificationData(): Promise<Record<string, number>> { // Explicit return type
+async function readVerificationData(): Promise<Record<string, number>> {
   try {
     const data = await fs.readFile(DATA_FILE, 'utf8');
-    return JSON.parse(data) as Record<string, number>; // Type assertion
-  } catch (err: unknown) { // Type err as unknown
-    if (err instanceof Error && err.code === 'ENOENT') { // Type guard
-      return {};
+    return JSON.parse(data) as Record<string, number>;
+  } catch (err: unknown) {
+    if (err instanceof Error) { // Check if it's an Error instance
+      const errorWithCode = err as { code?: string }; // Type assertion to potentially add 'code'
+      if (errorWithCode.code === 'ENOENT') { // Now it's safe to check err.code
+        return {};
+      }
     }
     console.error("Error reading verification data:", err);
     return {};
