@@ -79,9 +79,7 @@ export default function Home() {
     );
 
     try {
-      const data = await verify(result, lastVerificationTime,// Pass lastVerificationTime as number | null
-      signal
-       );  // Pass lastVerificationTime to the server action
+      const data = await verify(result, lastVerificationTime, signal );  // Pass lastVerificationTime to the server action
 
       if (data.success) {
         console.log("Successful response from backend:\n", JSON.stringify(data));
