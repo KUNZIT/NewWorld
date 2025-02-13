@@ -95,7 +95,7 @@ export default function Home() {
        } else {
     console.error("An unknown error occurred:", error);
     alert("An unknown error occurred."); // Or handle differently
-      
+     } 
     }
   };
 
