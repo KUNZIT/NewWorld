@@ -91,8 +91,13 @@ export default function Home() {
         throw new Error(`Verification failed: ${data.detail}`);
       }
     } catch (error) {
+      if (error instanceof Error) { // Type guard
       console.error("Error during verification:", error);
       alert(error.message); // Display error to the user
+       } else {
+    console.error("An unknown error occurred:", error);
+    alert("An unknown error occurred."); // Or handle differently
+      
     }
   };
 
