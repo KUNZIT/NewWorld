@@ -25,7 +25,7 @@ const action = process.env.NEXT_PUBLIC_WLD_ACTION as string;
 
 export async function verify(
   proof: IVerifyRequest["proof"],
-  lastVerificationTime: number | null // Add parameter for last verification time
+  lastVerificationTime: number | null, // Add parameter for last verification time
   signal?: string,
 ): Promise<VerifyReply> {
 
