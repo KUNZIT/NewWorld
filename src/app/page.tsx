@@ -79,7 +79,7 @@ export default function Home() {
     );
 
     try {
-      const data = await verify(result, lastVerificationTime ? parseInt(lastVerificationTime, 10) : null,
+      const data = await verify(result, lastVerificationTime,// Pass lastVerificationTime as number | null
       signal
        );  // Pass lastVerificationTime to the server action
 
