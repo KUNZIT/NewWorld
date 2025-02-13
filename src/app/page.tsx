@@ -2,7 +2,7 @@
 
 import { VerificationLevel, IDKitWidget, useIDKit } from "@worldcoin/idkit";
 import type { ISuccessResult } from "@worldcoin/idkit";
-import { verify } from "./actions/verify";
+import { verify } from './actions/verify'; // Correct relative path
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 
