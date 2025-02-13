@@ -71,7 +71,7 @@ export default function Home() {
         result.nullifier_hash
     );
   };
-
+  const [signal, setSignal] = useState<string | undefined>(undefined); // Add state for signal
   const handleProof = async (result: ISuccessResult) => {
     console.log(
       "Proof received from IDKit, sending to backend:\n",
