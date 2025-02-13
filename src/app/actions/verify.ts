@@ -25,8 +25,8 @@ const action = process.env.NEXT_PUBLIC_WLD_ACTION as string;
 
 export async function verify(
   proof: IVerifyRequest["proof"],
-  signal?: string,
   lastVerificationTime: number | null // Add parameter for last verification time
+  signal?: string,
 ): Promise<VerifyReply> {
 
   const userId = proof.nullifier_hash;
