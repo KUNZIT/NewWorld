@@ -95,6 +95,37 @@ export default function Home() {
   };
 
   return (
-    // ... (rest of your JSX - no changes needed)
+    <div className="relative h-screen w-screen">
+      <Image
+        src="/home.jpg" // Replace with your image path
+        alt="Full Screen Image"
+        fill
+        style={{ objectFit: 'cover' }}
+        priority // Add priority for faster loading of hero images
+      />
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <p className="text-2xl mb-5">WATER</p>
+        <IDKitWidget
+          action={action}
+          app_id={app_id}
+          onSuccess={onSuccess}
+          handleVerify={handleProof}
+          verification_level={VerificationLevel.Orb}
+        />
+        <button
+          className="border border-black bg-white text-black rounded-md"
+          onClick={handleVerifyClick}
+          disabled={buttonDisabled} // Disable the button while the timer is runn
+        >
+          <div className="mx-3 my-1">Verify with World ID</div>
+        </button>
+
+        {timerRunning && ( // Conditionally render the timer display
+          <div className="timer-display">
+            Time remaining: {timer} seconds
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
