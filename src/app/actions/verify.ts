@@ -1,6 +1,8 @@
-﻿import { VerificationLevel } from "@worldcoin/idkit-core";
+﻿"use server"; // Keep "use server"
+
+import { VerificationLevel } from "@worldcoin/idkit-core";
 import { verifyCloudProof } from "@worldcoin/idkit-core/backend";
-import { kv } from '@vercel/kv';
+import { kv } from '@vercel/kv'; // Import Vercel KV SDK - Let's try to keep this
 
 export type VerifyReply = {
   success: boolean;
@@ -21,23 +23,23 @@ interface IVerifyRequest {
 
 const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`;
 const action = process.env.NEXT_PUBLIC_WLD_ACTION as string;
-const KV_KEY = 'world-id-verifications';
+const KV_KEY = 'world-id-verifications'; // Key to store verification data
 
 async function readVerificationData() {
   try {
-    const data = await kv.get(KV_KEY);
-    return (data ? JSON.parse(data as string) : {}) as Record<string, number>;
+    const data = await kv.get(KV_KEY); // Get data from Vercel KV -  Still using kv.get()
+    return (data ? JSON.parse(data as string) : {}) as Record<string, number>; // Parse JSON
   } catch (err) {
-    console.error("Error reading verification data from Redis:", err);
+    console.error("Error reading verification data from Redis:", err); // Updated log message
     return {};
   }
 }
 
 async function writeVerificationData(data: Record<string, number>) {
   try {
-    await kv.set(KV_KEY, JSON.stringify(data));
+    await kv.set(KV_KEY, JSON.stringify(data)); // Store data as JSON string in Vercel KV - Still using kv.set()
   } catch (err) {
-    console.error("Error writing verification data to Redis:", err);
+    console.error("Error writing verification data to Redis:", err); // Updated log message
   }
 }
 
@@ -45,7 +47,6 @@ export async function verify(
   proof: IVerifyRequest["proof"],
   signal?: string
 ): Promise<VerifyReply> {
-  "use server"; // Correct placement: Inside the server function
 
   const userId = proof.nullifier_hash;
 
