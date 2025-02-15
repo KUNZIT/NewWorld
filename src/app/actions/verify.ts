@@ -2,7 +2,7 @@
 
 import { VerificationLevel } from "@worldcoin/idkit-core";
 import { verifyCloudProof } from "@worldcoin/idkit-core/backend";
-import { kv } from '@vercel/kv'; // Import Vercel KV SDK - Let's try to keep this
+import { createClient } from 'redis'; // Import createClient
 
 export type VerifyReply = {
   success: boolean;
@@ -25,22 +25,42 @@ const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`;
 const action = process.env.NEXT_PUBLIC_WLD_ACTION as string;
 const KV_KEY = 'world-id-verifications'; // Key to store verification data
 
-async function readVerificationData() {
-  try {
-    const data = await kv.get(KV_KEY); // Get data from Vercel KV -  Still using kv.get()
-    return (data ? JSON.parse(data as string) : {}) as Record<string, number>; // Parse JSON
-  } catch (err) {
-    console.error("Error reading verification data from Redis:", err); // Updated log message
+let redisClient: ReturnType<typeof createClient> | null = null; // Initialize to null
+async function getRedisClient() {  // Function to create and reuse the client
+  if (!redisClient) {
+    try {
+        redisClient = createClient({
+            url: process.env.REDIS_URL, // Use REDIS_URL environment variable
+        });
+        await redisClient.connect();
+        console.log('Connected to Redis');
+    } catch (error) {
+        console.error('Error connecting to Redis:', error);
+        throw error; // Re-throw the error to prevent the server from starting
+    }
+}
+return redisClient;
+}
+
+
+async function readVerificationData(): Promise<Record<string, number>> {
+    const client = await getRedisClient();
+  try {
+    const data = await client.get('world-id-verifications');
+    return data ? JSON.parse(data) : {};
+  } catch (err) {
+    console.error("Error reading verification data from Redis:", err);
     return {};
   }
 }
 
 async function writeVerificationData(data: Record<string, number>) {
-  try {
-    await kv.set(KV_KEY, JSON.stringify(data)); // Store data as JSON string in Vercel KV - Still using kv.set()
-  } catch (err) {
-    console.error("Error writing verification data to Redis:", err); // Updated log message
-  }
+    const client = await getRedisClient();
+  try {
+    await client.set('world-id-verifications', JSON.stringify(data));
+  } catch (err) {
+    console.error("Error writing verification data to Redis:", err);
+  }
 }
 
 export async function verify(
@@ -81,3 +101,16 @@ export async function verify(
     return { success: false, code: verifyRes.code, attribute: verifyRes.attribute, detail: verifyRes.detail };
   }
 }
+
+
+
+verify.close = async () => {
+    if (redisClient) {
+        try {
+            await redisClient.quit();
+            console.log('Redis connection closed.');
+        } catch (error) {
+            console.error('Error closing Redis connection:', error);
+        }
+    }
+};
