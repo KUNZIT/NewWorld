@@ -1,7 +1,9 @@
-"use server";
+﻿"use server";
 
 import { VerificationLevel } from "@worldcoin/idkit-core";
 import { verifyCloudProof } from "@worldcoin/idkit-core/backend";
+import * as fs from 'fs/promises';
+import path from 'path';
 
 export type VerifyReply = {
   success: boolean;
@@ -22,17 +24,41 @@ interface IVerifyRequest {
 
 const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`;
 const action = process.env.NEXT_PUBLIC_WLD_ACTION as string;
+const DATA_FILE = path.join(process.cwd(), 'verifications.json');
+
+async function readVerificationData() {
+  try {
+    const data = await fs.readFile(DATA_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return {};
+    }
+    console.error("Error reading verification data:", err);
+    return {};
+  }
+}
+
+async function writeVerificationData(data) {
+  try {
+    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+  } catch (err) {
+    console.error("Error writing verification data:", err);
+  }
+}
 
 export async function verify(
   proof: IVerifyRequest["proof"],
-  lastVerificationTime: number | null, // Add parameter for last verification time
-  signal?: string,
+  signal?: string
 ): Promise<VerifyReply> {
 
   const userId = proof.nullifier_hash;
 
-  if (lastVerificationTime) {
-    const timeSinceLastVerification = Date.now() - lastVerificationTime;
+  const verificationData = await readVerificationData();
+  const lastVerification = verificationData[userId];
+
+  if (lastVerification) {
+    const timeSinceLastVerification = Date.now() - lastVerification;
     const twentyFourHours = 24 * 60 * 60 * 1000;
 
     if (timeSinceLastVerification < twentyFourHours) {
@@ -52,7 +78,9 @@ export async function verify(
 
   const verifyRes = await verifyCloudProof(proof, app_id, action, signal);
   if (verifyRes.success) {
-    return { success: true }; // No longer writing to file system
+    verificationData[userId] = Date.now();
+    await writeVerificationData(verificationData);
+    return { success: true };
   } else {
     return { success: false, code: verifyRes.code, attribute: verifyRes.attribute, detail: verifyRes.detail };
   }

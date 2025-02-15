@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^6.3.1",
     "@types/node": "20.14.11",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
@@ -17,11 +16,9 @@
     "@worldcoin/idkit-core": "^1.2.2",
     "eslint": "9.20.0",
     "eslint-config-next": "14.2.5",
-    "mongodb": "^6.13.0",
-    "next": "^14.2.24",
-    "prisma": "^6.3.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "next": "14.1.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "typescript": "5.5.4"
   },
   "devDependencies": {
