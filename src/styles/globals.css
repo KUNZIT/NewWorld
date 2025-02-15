@@ -2,10 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-.disable-interaction {
-  pointer-events: none;
-  cursor:none;
-  user-select:none;
-  touch-action:none;
-
-}
