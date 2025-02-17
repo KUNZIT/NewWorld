@@ -165,7 +165,7 @@ export default function Home() {
                     verification_level={VerificationLevel.Orb}
                 />
                 <button
-                    className="border border-white bg-black text-white rounded-md px-4 py-2 text-lg"
+                    className="border border-white bg-black text-white rounded-md px-4 py-2 text-lg hover:bg-gray-100"
                     onClick={handleVerifyClick}
                     disabled={buttonDisabled} // Disable the button while the timer is runn
                 >
@@ -173,7 +173,7 @@ export default function Home() {
                 </button>
 
                 {timerRunning && ( // Conditionally render the timer display
-                    <div className="timer-display">
+                    <div className="timer-display text-white">
                         Time remaining: {timer} seconds
                     </div>
                 )}
