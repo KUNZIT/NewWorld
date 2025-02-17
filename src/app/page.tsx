@@ -165,7 +165,7 @@ export default function Home() {
                     verification_level={VerificationLevel.Orb}
                 />
                 <button
-                    className="border border-white bg-black text-white rounded-md px-4 py-2 text-lg hover:bg-gray-100"
+                    className="border border-white bg-black text-white rounded-md px-4 py-2 text-lg hover:bg-blue-800"
                     onClick={handleVerifyClick}
                     disabled={buttonDisabled} // Disable the button while the timer is runn
                 >
