@@ -41,7 +41,7 @@ const AnimatedRainCanvasBackground = () => { // Define AnimatedRainCanvasBackgro
 
         const animateRain = () => {
             if (!ctx) return; // Check context again in animation loop
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.02)'; // Very light black with alpha (adjust alpha for fade speed)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Very light black with alpha (adjust alpha for fade speed)
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             rainArray.forEach(drop => {
@@ -114,7 +114,7 @@ export default function Home() {
                 console.log("Timer finished. Reloading the page...");
                 window.location.reload(); // Perform full page reload
             }
-        }, 1500);
+        }, 1400);
     }; // Closing brace for handleVerifyClick function is correctly placed here
 
     if (!app_id) {
