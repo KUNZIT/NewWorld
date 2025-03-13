@@ -147,7 +147,7 @@ export default function Home() {
         if (data.success) {
             console.log("Successful response from backend:\n", JSON.stringify(data));
         } else {
-            
+         throw new Error(`Verification failed: ${data.detail}`);   
         }
     };
 
