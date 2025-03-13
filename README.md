@@ -1,3 +1,7 @@
+
+
+![w](https://github.com/user-attachments/assets/b782f5d0-5cc7-4e39-b5c8-3e06af81470d)
+
 # WATER KIOSK
 
 This is a Next.js application designed to communicate with the World Super Wallet app,
