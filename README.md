@@ -1,25 +1,43 @@
-# World ID Next.js Template
+# WATER KIOSK
 
-This is a template repository for creating a new project using Next.js, TailwindCSS, and the [World ID SDK](https://id.worldcoin.org). This template isn't intended for use cases that require on-chain verification, but rather for use cases that leverage off-chain web backend verification.
+This is a Next.js application designed to communicate with the World Super Wallet app,
+
+verifying if a user possesses the required orb verification level.
+
+Upon successful verification, the application emits a short audio signal (beep).
+
+To prevent abuse, verification checks are restricted to a 24-hour period, managed using a Redis database.
+
+## Potential Use Case
+
+This application can be deployed in a vending machine to distribute water or other products
+ based on unique human identity and mathematical patterns.
+
+Visit https://new-world-j1t1.vercel.app/
+
+## Environment Variables
+
+This application requires the following environment variables:
+
+-   `WORLD_ID_APP_ID`: Your World ID application ID.
+-   `ACTION_NAME`: The specific action name used for verification.
+-   `REDIS_URL`: The URL of your Redis database.
 
 ## Getting Started
 
-First, set the correct Node.js version using `nvm` and run the development server:
+1.  **Use Node.js v20:**
 
-```bash
-nvm use 20
-pnpm i && pnpm dev
-```
+    ```bash
+    nvm use 20
+    ```
 
-Copy `.env.example` to `.env.local` and add your World ID App ID and Action Name to the appropriate variables.
+2.  **Install dependencies and start the development server:**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    ```bash
+    pnpm install && pnpm dev
+    ```
 
-This template includes a server action to verify the proof returned by the IDKit widget at `src/app/actions/verify.ts`. Edit this file to handle any backend functions you need to perform after the proof has been verified.
 
-You can start editing the client-side page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file. Edit the `onSuccess` function to define frontend behavior once the proof has been verified.
-
-## Learn More
 
 To learn more about Next.js and World ID, take a look at the following resources:
 
@@ -27,8 +45,4 @@ To learn more about Next.js and World ID, take a look at the following resources
 -   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 -   [World ID Documentation](https://docs.worldcoin.org/) - learn about World ID features and API.
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
