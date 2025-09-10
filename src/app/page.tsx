@@ -343,6 +343,8 @@ export default function Home() {
     )
   }
 
+const isButtonHidden = true; // Set to 'false' to show the button
+  
   return (
     <>
       <AnimatedRainCanvasBackground />
@@ -370,7 +372,8 @@ export default function Home() {
             disabled={!isConnected || isLoading}
             className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg"
             size="lg"
-          >
+            style={{ visibility: isButtonHidden ? "hidden" : "visible" }}
+            >
             {isLoading ? "Operating..." : "Operate Relay"}
           </Button>
         </div>
