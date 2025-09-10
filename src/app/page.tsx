@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from "./button"
 import { AlertCircle } from "lucide-react"
-import type { SerialPort } from "serialport"
+
 
 import { VerificationLevel, IDKitWidget, useIDKit } from "@worldcoin/idkit"
 import type { ISuccessResult } from "@worldcoin/idkit"
