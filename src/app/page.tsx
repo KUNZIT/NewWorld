@@ -147,16 +147,10 @@ export default function Home() {
         })
       }
 
-      await selectedPort.open({
-        baudRate: 9600,
-        dataBits: 8,
-        stopBits: 1,
-        parity: "none",
-        flowControl: "none",
-      })
+      await selectedPort.open({ baudRate: 9600 });
 
-      const portReader = selectedPort.readable?.getReader()
-      const portWriter = selectedPort.writable?.getWriter()
+      const portReader = selectedPort.readable?.getReader();
+      const portWriter = selectedPort.writable?.getWriter();
 
       if (!portReader || !portWriter) {
         throw new Error("Failed to get serial port reader/writer")
