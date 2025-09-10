@@ -1,24 +1,24 @@
-﻿"use server"; // Keep "use server"
+"use server"; // Keep "use server"
 
 import { VerificationLevel } from "@worldcoin/idkit-core";
 import { verifyCloudProof } from "@worldcoin/idkit-core/backend";
 import { createClient } from 'redis'; // Import createClient
 
 export type VerifyReply = {
-  success: boolean;
-  code?: string;
-  attribute?: string | null;
-  detail?: string;
+  success: boolean;
+  code?: string;
+  attribute?: string | null;
+  detail?: string;
 };
 
 interface IVerifyRequest {
-  proof: {
-    nullifier_hash: string;
-    merkle_root: string;
-    proof: string;
-    verification_level: VerificationLevel;
-  };
-  signal?: string;
+  proof: {
+    nullifier_hash: string;
+    merkle_root: string;
+    proof: string;
+    verification_level: VerificationLevel;
+  };
+  signal?: string;
 }
 
 const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`;
@@ -50,8 +50,8 @@ async function readVerificationData(): Promise<Record<string, number>> {
     return data ? JSON.parse(data) : {};
   } catch (err) {
     console.error("Error reading verification data from Redis:", err);
-    return {};
-  }
+    return {};
+  }
 }
 
 async function writeVerificationData(data: Record<string, number>) {
@@ -64,53 +64,52 @@ async function writeVerificationData(data: Record<string, number>) {
 }
 
 export async function verify(
-  proof: IVerifyRequest["proof"],
-  signal?: string
+  proof: IVerifyRequest["proof"],
+  signal?: string
 ): Promise<VerifyReply> {
 
-  const userId = proof.nullifier_hash;
+  const userId = proof.nullifier_hash;
 
-  const verificationData = await readVerificationData();
-  const lastVerification = verificationData[userId];
+  const verificationData = await readVerificationData();
+  const lastVerification = verificationData[userId];
 
-  if (lastVerification) {
-    const timeSinceLastVerification = Date.now() - lastVerification;
-    const twentyFourHours = 24 * 60 * 60 * 1000;
+  if (lastVerification) {
+    const timeSinceLastVerification = Date.now() - lastVerification;
+    const fiveMinutes = 5 * 60 * 1000;
 
-    if (timeSinceLastVerification < twentyFourHours) {
-      const remainingTime = twentyFourHours - timeSinceLastVerification;
-      const hours = Math.floor(remainingTime / (60 * 60 * 1000));
-      const minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
-      const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+    if (timeSinceLastVerification < fiveMinutes) {
+      const remainingTime = fiveMinutes - timeSinceLastVerification;
+      const minutes = Math.floor(remainingTime / (60 * 1000));
+      const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
 
-      const message = `Verification is only allowed once every 24 hours. Please wait ${hours}:${minutes}:${seconds} `;
+      const message = `Verification is only allowed once every 5 minutes. Please wait ${minutes}:${seconds} `;
 
-      return {
-        success: false,
-        detail: message,
-      };
-    }
-  }
+      return {
+        success: false,
+        detail: message,
+      };
+    }
+  }
 
-  const verifyRes = await verifyCloudProof(proof, app_id, action, signal);
-  if (verifyRes.success) {
-    verificationData[userId] = Date.now();
-    await writeVerificationData(verificationData);
-    return { success: true };
-  } else {
-    return { success: false, code: verifyRes.code, attribute: verifyRes.attribute, detail: verifyRes.detail };
-  }
+  const verifyRes = await verifyCloudProof(proof, app_id, action, signal);
+  if (verifyRes.success) {
+    verificationData[userId] = Date.now();
+    await writeVerificationData(verificationData);
+    return { success: true };
+  } else {
+    return { success: false, code: verifyRes.code, attribute: verifyRes.attribute, detail: verifyRes.detail };
+  }
 }
 
 
 
 verify.close = async () => {
     if (redisClient) {
-        try {
-            await redisClient.quit();
-            console.log('Redis connection closed.');
-        } catch (error) {
-            console.error('Error closing Redis connection:', error);
-        }
+      try {
+          await redisClient.quit();
+          console.log('Redis connection closed.');
+      } catch (error) {
+          console.error('Error closing Redis connection:', error);
+      }
     }
 };
