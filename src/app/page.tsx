@@ -1,48 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-// MOCK: Defining Button component to resolve dependency error
-const Button = (props: React.ComponentPropsWithoutRef<'button'> & { size?: string, disabled: boolean, className: string }) => {
-    return (
-        <button
-            {...props}
-            disabled={props.disabled}
-            className={`rounded-lg transition-colors duration-200 ${props.className}`}
-        >
-            {props.children}
-        </button>
-    )
-}
+import { Button } from "./button"
 import { AlertCircle } from "lucide-react"
 
-// MOCK: Replacing external World ID imports with a direct CDN import (in an HTML component, or assuming global availability in this sandbox)
-// NOTE: Since this is a React file, we cannot directly use CDNs, but we must assume the dependency is available, or use the provided types.
-// We keep the imports as they are, but since the environment is failing, we must assume these are either local or the build system has an issue.
-// I will remove the problematic imports for the sandbox to compile and use fallback types.
-// import { VerificationLevel, IDKitWidget, useIDKit } from "@worldcoin/idkit" 
-// import type { ISuccessResult } from "@worldcoin/idkit"
 
-// --- Fallback Types/Mocks for Worldcoin dependencies to allow compilation ---
-
-// Simplified types for ISuccessResult (World ID)
-type ISuccessResult = {
-    nullifier_hash: string;
-    merkle_root: string;
-    proof: string;
-    credential_type: string;
-}
-
-// Mock IDKit Widget and hooks for compilation
-const VerificationLevel = { Orb: 'orb' };
-const IDKitWidget = (props: any) => null;
-const useIDKit = () => ({ setOpen: (val: boolean) => console.log(`IDKit setOpen: ${val}`) });
-
-// MOCK: Defining verify action to resolve dependency error
-const verify = async (result: ISuccessResult) => {
-    console.log("Mock verification request sent.", result);
-    // Simulate successful verification
-    return { success: true, detail: "Mock verification successful" };
-}
+import { VerificationLevel, IDKitWidget, useIDKit } from "@worldcoin/idkit"
+import type { ISuccessResult } from "@worldcoin/idkit"
+import { verify } from "./actions/verify"
 import Image from 'next/image'
 import React from 'react'
 
@@ -274,9 +239,8 @@ export default function Home() {
   }, [sendCommand])
 
   // World ID logic
-  // Since we cannot access process.env in this execution environment, we use placeholders.
-  const app_id = "app_PLACEHOLDER" as `app_${string}` // process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`
-  const action = "verify" // process.env.NEXT_PUBLIC_WLD_ACTION
+  const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`
+  const action = process.env.NEXT_PUBLIC_WLD_ACTION
 
   const handleVerifyClick = () => {
     setOpen(true)
@@ -297,21 +261,19 @@ export default function Home() {
     }, 1400)
   }
 
-  // NOTE: Skipping environment variable checks as they rely on external context.
-  // if (!app_id) {
-  //   throw new Error("app_id is not set in environment variables!")
-  // }
-  // if (!action) {
-  //   throw new Error("action is not set in environment variables!")
-  // }
+  if (!app_id) {
+    throw new Error("app_id is not set in environment variables!")
+  }
+  if (!action) {
+    throw new Error("action is not set in environment variables!")
+  }
 
   const { setOpen } = useIDKit()
 
   const onSuccess = (result: ISuccessResult) => {
     // Play a short beep sound
-    // const audio = new Audio('/beep.mp3') // NOTE: File access won't work in a single file React component
-    // audio.play()
-    console.log("Mock Beep Sound Played.")
+    const audio = new Audio('/beep.mp3')
+    audio.play()
     // Trigger the relay operation
     operateRelay()
     console.log(
@@ -329,8 +291,7 @@ export default function Home() {
     if (data.success) {
       console.log("Successful response from backend:\n", JSON.stringify(data))
     } else {
-      // Use console.error instead of throwing for better runtime stability
-      console.error(`Verification failed: ${data.detail}`)
+      throw new Error(`${data.detail}`)
     }
   }
 
@@ -352,7 +313,6 @@ export default function Home() {
                 }
                 
                 const text = decoder.decode(value);
-                // Handle split messages and process line by line
                 const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
                 for (const line of lines) {
@@ -370,7 +330,6 @@ export default function Home() {
                         console.log("[v0] External button pressed! Triggering World ID verification.");
                         
                         // Programmatically click the World ID button if it's not already disabled
-                        // We check both the ref and the state variable 'buttonDisabled'
                         if (worldIdButtonRef.current && !buttonDisabled) {
                             worldIdButtonRef.current.click();
                         } else {
@@ -390,12 +349,10 @@ export default function Home() {
         readSerialData();
     }
 
-    // Dependency array for the effect. Note: buttonDisabled must be included
-    // as its value is used inside the effect's logic.
     return () => {
         loop = false; // Stop the while loop if the component unmounts or dependencies change
     };
-  }, [isConnected, reader, setRelayState, buttonDisabled]) // added buttonDisabled
+  }, [isConnected, reader, setRelayState, buttonDisabled])
 
   // Effect to handle initial auto-connect attempt and disconnections
   useEffect(() => {
@@ -415,7 +372,6 @@ export default function Home() {
       setReader(null)
       setWriter(null)
       setAutoConnectAttempted(false)
-      // Attempt to reconnect after a short delay
       setTimeout(() => {
         connectToArduino(true)
       }, 1000)
@@ -496,7 +452,7 @@ const isButtonHidden = true; // Set to 'false' to show the button
           className="border border-white bg-black text-white rounded-md px-4 py-2 text-lg hover:bg-blue-800"
           onClick={handleVerifyClick}
           disabled={buttonDisabled}
-          ref={worldIdButtonRef} // <-- This ref is crucial for the Arduino to trigger the button
+          ref={worldIdButtonRef} // <-- This ref is used by the new serial reader logic
         >
           <div className="mx-3 my-1">Verify with World ID</div>
         </button>
