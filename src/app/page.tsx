@@ -411,7 +411,7 @@ const isButtonHidden = true; // Set to 'false' to show the button
     <>
       <AnimatedRainCanvasBackground />
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6">
-        <p className="text-8xl mb-5 text-blue-900">WATER KIOSK</p>
+        <p className="text-8xl mb-5 text-blue-900">WATER</p>
 
         {/* Arduino Controller Buttons */}
 <div className="flex flex-col space-y-4 items-center">
