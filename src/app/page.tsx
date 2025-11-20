@@ -414,21 +414,17 @@ const isButtonHidden = true; // Set to 'false' to show the button
         <p className="text-8xl mb-5 text-blue-900">WATER KIOSK</p>
 
         {/* Arduino Controller Buttons */}
-        <div className="flex flex-col space-y-4 items-center">
-          {needsPermission && !isConnected ? (
-            <Button
-              onClick={() => connectToArduino(false)}
-              disabled={isLoading}
-              className="bg-black hover:bg-gray-800 text-white px-8 py-2"
-            >
-              {isLoading ? "Connecting..." : "Grant Connection"}
-            </Button>
-          ) : (
-            <Button disabled className="bg-green-500 hover:bg-green-500 text-white cursor-default px-8 py-2">
-              Ready
-            </Button>
-          )}
-
+<div className="flex flex-col space-y-4 items-center">
+  {/* Use && so that if the condition is false, nothing renders */}
+  {needsPermission && !isConnected && (
+    <Button
+      onClick={() => connectToArduino(false)}
+      disabled={isLoading}
+      className="bg-black hover:bg-gray-800 text-white px-8 py-2"
+    >
+      {isLoading ? "Connecting..." : "Grant Connection"}
+    </Button>
+  )}
           <Button
             onClick={operateRelay}
             disabled={!isConnected || isLoading}
