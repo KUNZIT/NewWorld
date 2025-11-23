@@ -34,7 +34,8 @@ Wiring:
 Upload this sketch code to the Arduino Leonardo microcontroller via the Arduino IDE
 
 
-###cpp
+###
+'''cpp
 // Arduino Leonardo WebUSB Relay Control Sketch with Auto-Timer and Button Input
 const int RELAY_PIN = 2; // Connect relay to digital pin 2
 const int BUTTON_PIN = 4; // Connect physical button (input) to digital pin 4
