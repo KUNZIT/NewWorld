@@ -1,23 +1,20 @@
 
 
-![w](https://github.com/user-attachments/assets/b782f5d0-5cc7-4e39-b5c8-3e06af81470d)
-
-# WATER KIOSK
+# WATER KIOSK 
 
 This is a Next.js application designed to communicate with the World Super Wallet app,
 
 verifying if a user possesses the required orb verification level.
 
-Upon successful verification, the application emits a short audio signal (beep).
+Upon successful verification, the application will operate Arduino microcontroller to switch on water pump motor. 
 
-To prevent abuse, verification checks are restricted to a 24-hour period, managed using a Redis database.
+## Use cases 
+Water distribution machine to provide water for verified unique human 
 
-## Potential Use Case
-
-This application can be deployed in a vending machine to distribute water or other products
- based on unique human identity and mathematical patterns.
-
-Visit https://new-world-j1t1.vercel.app/
+Visit
+https://docs.google.com/presentation/d/1WlVzUMkRhP9nAike5jsqk_6oJ4VcdpBQQPlnX7_f3T0/edit?usp=drivesdk
+https://youtube.com/shorts/b3y7G8OybpE?feature=share
+https://new-world-j1t1.vercel.app/
 
 ## Environment Variables
 
