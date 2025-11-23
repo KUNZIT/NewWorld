@@ -14,6 +14,7 @@ Water distribution machine to provide water for verified unique human
 Visit
 https://docs.google.com/presentation/d/1WlVzUMkRhP9nAike5jsqk_6oJ4VcdpBQQPlnX7_f3T0/edit?usp=drivesdk
 https://youtube.com/shorts/b3y7G8OybpE?feature=share
+
 https://new-world-j1t1.vercel.app/
 
 ## Environment Variables
@@ -25,6 +26,12 @@ This application requires the following environment variables:
 -   `REDIS_URL`: The URL of your Redis database.
 
 ## Getting Started
+
+Wiring:
+*connect relay to Arduino Leonardo digital pin 2 ;
+*connect Infrared sensor to the Arduino Leonardo digital pin 4
+
+Upload this sketch code to the Arduino Leonardo microcontroller via the Arduino IDE
 
 1.  **Use Node.js v20:**
 
