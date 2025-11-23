@@ -32,8 +32,8 @@ Wiring:
 *connect Infrared sensor to the Arduino Leonardo digital pin 4
 
 Upload this sketch code to the Arduino Leonardo microcontroller via the Arduino IDE
-
-
+[
+](https://github.com/KUNZIT/NewWorld/blob/main/public/sketch.ino)
 
 1.  **Use Node.js v20:**
 
